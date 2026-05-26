@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "golang-pro": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/golang-pro/SKILL.md",
+      "computedHash": "12b4cac8f65228f82cbc26f0da9232aba87ffa45ccd01afa3998fb8ec61dc288"
+    },
+    "whatsapp-cloud-api": {
+      "source": "bellopushon/whatsapp-cloud-api",
+      "sourceType": "github",
+      "skillPath": "skills/whatsapp-cloud-api/SKILL.md",
+      "computedHash": "a91635f80534895f398d463b9a8a77ea28ce0785d90c57cbcf21e655300f9876"
+    }
+  }
+}
