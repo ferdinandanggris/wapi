@@ -53,18 +53,20 @@ func TestDeleteTemplate(t *testing.T) {
 	defer ms.Close()
 
 	deleted := false
-	ms.on("DELETE", "/template-123", func(w http.ResponseWriter, r *http.Request) {
-		deleted = true
+	ms.on("DELETE", "/waba-456/message_templates", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("name") == "hello_world" {
+			deleted = true
+		}
 		writeJSON(w, http.StatusOK, map[string]bool{"success": true})
 	})
 
 	c := ms.client()
-	err := c.DeleteTemplate(context.Background(), "template-123")
+	err := c.DeleteTemplate(context.Background(), "waba-456", "hello_world")
 	if err != nil {
 		t.Fatalf("DeleteTemplate failed: %v", err)
 	}
 	if !deleted {
-		t.Error("expected delete to be called")
+		t.Error("expected delete to be called with name=hello_world")
 	}
 }
 
@@ -89,13 +91,22 @@ func TestGetTemplate(t *testing.T) {
 }
 
 func TestEditTemplate(t *testing.T) {
-	ms := newDefaultMockServer()
+	ms := newMockServer()
 	defer ms.Close()
+
+	edited := false
+	ms.on("POST", "/template-789", func(w http.ResponseWriter, r *http.Request) {
+		edited = true
+		writeJSON(w, http.StatusOK, map[string]bool{"success": true})
+	})
 
 	c := ms.client()
 	tpl := &types.Template{Name: "hello_world", Language: "en_US", Category: "utility"}
-	err := c.EditTemplate(context.Background(), "waba-456", "", tpl)
+	err := c.EditTemplate(context.Background(), "waba-456", "template-789", tpl)
 	if err != nil {
 		t.Fatalf("EditTemplate failed: %v", err)
+	}
+	if !edited {
+		t.Error("expected edit to be called")
 	}
 }

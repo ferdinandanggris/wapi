@@ -1,5 +1,7 @@
 package types
 
+import "encoding/json"
+
 // TemplateMessage references a pre-approved message template with optional parameters.
 type TemplateMessage struct {
 	Name       string                `json:"name"`
@@ -20,6 +22,32 @@ type TemplateMsgComponent struct {
 	Parameters []*TemplateParameter    `json:"parameters,omitempty"`
 }
 
+// HasIndex reports whether the component has a meaningful index (for button components).
+// Non-button components (body, header, footer) do not have an index.
+func (c *TemplateMsgComponent) HasIndex() bool {
+	return c.Type == "button"
+}
+
+// MarshalJSON customizes JSON output to include index 0 for button components.
+func (c *TemplateMsgComponent) MarshalJSON() ([]byte, error) {
+	type alias TemplateMsgComponent
+	a := alias(*c)
+
+	if c.HasIndex() {
+		// Build manually to force index into output
+		m := map[string]interface{}{
+			"type":    c.Type,
+			"sub_type": c.SubType,
+			"index":   c.Index,
+		}
+		if c.Parameters != nil {
+			m["parameters"] = c.Parameters
+		}
+		return json.Marshal(m)
+	}
+	return json.Marshal(a)
+}
+
 // TemplateParameter is a value for template variables (text, image, video, document).
 type TemplateParameter struct {
 	Type string `json:"type"`
@@ -31,18 +59,20 @@ type TemplateParameter struct {
 
 // Template is a message template definition for CRUD operations.
 type Template struct {
-	Name       string              `json:"name"`
-	Language   string              `json:"language"`
-	Category   string              `json:"category"`
+	ID         string              `json:"id,omitempty"`
+	Name       string              `json:"name,omitempty"`
+	Language   string              `json:"language,omitempty"`
+	Category   string              `json:"category,omitempty"`
+	Status     string              `json:"status,omitempty"`
 	Components []*TemplateComponent `json:"components,omitempty"`
 }
 
 type TemplateComponent struct {
-	Type    string            `json:"type"`
-	Format  string            `json:"format,omitempty"`
-	Text    string            `json:"text,omitempty"`
-	Example string            `json:"example,omitempty"`
-	Buttons []*TemplateButton `json:"buttons,omitempty"`
+	Type    string             `json:"type"`
+	Format  string             `json:"format,omitempty"`
+	Text    string             `json:"text,omitempty"`
+	Example json.RawMessage    `json:"example,omitempty"`
+	Buttons []*TemplateButton  `json:"buttons,omitempty"`
 }
 
 type TemplateButton struct {

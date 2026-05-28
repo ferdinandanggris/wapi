@@ -21,7 +21,7 @@ type Client interface {
 
 	CreateTemplate(ctx context.Context, wabaID string, tpl *types.Template) (*types.Template, error)
 	EditTemplate(ctx context.Context, wabaID, templateID string, tpl *types.Template) error
-	DeleteTemplate(ctx context.Context, templateID string) error
+	DeleteTemplate(ctx context.Context, wabaID string, name string) error
 	GetTemplate(ctx context.Context, templateID string) (*types.Template, error)
 	ListTemplates(ctx context.Context, wabaID string, opts ...ListOption) (*types.TemplateList, error)
 

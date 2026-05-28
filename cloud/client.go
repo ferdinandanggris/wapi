@@ -9,6 +9,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"net/url"
 	"strings"
 	"time"
@@ -121,7 +122,10 @@ func (c *CloudClient) doUpload(ctx context.Context, path, filename, mimeType str
 		return fmt.Errorf("write field: %w", err)
 	}
 
-	fw, err := w.CreateFormFile("file", filename)
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, filename))
+	h.Set("Content-Type", mimeType)
+	fw, err := w.CreatePart(h)
 	if err != nil {
 		return fmt.Errorf("create form file: %w", err)
 	}

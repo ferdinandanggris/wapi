@@ -20,15 +20,15 @@ func (c *CloudClient) CreateTemplate(ctx context.Context, wabaID string, tpl *ty
 	return &created, nil
 }
 
-// EditTemplate updates an existing message template.
+// EditTemplate updates an existing message template by template ID.
 func (c *CloudClient) EditTemplate(ctx context.Context, wabaID, templateID string, tpl *types.Template) error {
-	path := fmt.Sprintf("%s/message_templates", wabaID)
-	return c.do(ctx, "POST", path, tpl, nil)
+	return c.do(ctx, "POST", templateID, tpl, nil)
 }
 
-// DeleteTemplate deletes a message template by ID.
-func (c *CloudClient) DeleteTemplate(ctx context.Context, templateID string) error {
-	return c.doDelete(ctx, templateID)
+// DeleteTemplate deletes a message template by name.
+func (c *CloudClient) DeleteTemplate(ctx context.Context, wabaID, name string) error {
+	path := fmt.Sprintf("%s/message_templates?name=%s", wabaID, url.QueryEscape(name))
+	return c.doDelete(ctx, path)
 }
 
 // GetTemplate retrieves a message template by ID.
