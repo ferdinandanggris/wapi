@@ -264,6 +264,12 @@ func (c *CloudClient) buildError(merr *metaError, httpCode int) error {
 	}
 }
 
+// SetAccessToken updates the access token at runtime.
+// All subsequent API calls use the new token.
+func (c *CloudClient) SetAccessToken(token string) {
+	c.accessToken = token
+}
+
 func (c *CloudClient) Close() error {
 	c.httpClient.CloseIdleConnections()
 	return nil

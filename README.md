@@ -217,6 +217,13 @@ client.SetWebhookCallback(ctx, appID,
     "messages", "message_template_status",
 )
 
+// Override callback for a specific WABA or phone number
+sub, _ = client.SetWebhookOverride(ctx, wabaID,
+    "https://your-server.com/waba-webhook",
+    "override_verify_token",
+)
+fmt.Printf("override uri: %s\n", sub.OverrideCallbackURI)
+
 // Set fields only
 client.SetWebhookFields(ctx, appID, "messages")
 
@@ -249,6 +256,9 @@ func main() {
         Logger:      log.Default(),
         OnMessage: func(msg *types.IncomingMsg, meta *types.Metadata, contact *types.WaContact) error {
             fmt.Printf("[%s][%s] %s: %s\n", meta.DisplayPhoneNumber, msg.ID, contact.Profile.Name, msg.Text.Body)
+            if msg.Reaction != nil {
+                fmt.Printf("  reaction %q on message %s\n", msg.Reaction.Emoji, msg.Reaction.MessageID)
+            }
             return nil
         },
         OnStatus: func(status *types.StatusUpdate, meta *types.Metadata) error {
@@ -285,6 +295,9 @@ client := cloud.New(
 // client.SendMessage(ctx, phoneID, msg)
 // client.MarkAsRead(ctx, phoneID, msgID)
 // client.UploadMedia(ctx, phoneID, ...)
+
+// Runtime token rotation — swap token without recreating client
+client.SetAccessToken("EAAy...")
 ```
 
 Recommended environment variables:

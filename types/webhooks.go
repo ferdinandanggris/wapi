@@ -59,6 +59,7 @@ type IncomingMsg struct {
 	Context     *IncomingContext   `json:"context,omitempty"`
 	Referral    *IncomingReferral  `json:"referral,omitempty"`
 	Order       *IncomingOrder     `json:"order,omitempty"`
+	Reaction    *IncomingReaction  `json:"reaction,omitempty"`
 }
 
 type IncomingText struct {
@@ -183,6 +184,7 @@ type StatusErrorData struct {
 type SubscribedApp struct {
 	Name                 string   `json:"name,omitempty"`
 	ID                   string   `json:"id,omitempty"`
+	OverrideCallbackURI  string   `json:"override_callback_uri,omitempty"`
 }
 
 // Subscription represents a webhook subscription configuration.
@@ -195,6 +197,12 @@ type Subscription struct {
 
 type SubscriptionField struct {
 	Name string `json:"name"`
+}
+
+// IncomingReaction represents a reaction to a message received via webhook.
+type IncomingReaction struct {
+	MessageID string `json:"message_id"`
+	Emoji     string `json:"emoji,omitempty"`
 }
 
 // SubscriptionResponse contains the list of subscribed webhook fields.

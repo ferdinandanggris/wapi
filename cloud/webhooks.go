@@ -56,3 +56,19 @@ func (c *CloudClient) SetWebhookCallback(ctx context.Context, appID, callbackURL
 	}
 	return c.doPostForm(ctx, path, data, nil)
 }
+
+type overrideRequest struct {
+	OverrideCallbackURI string `json:"override_callback_uri"`
+	VerifyToken         string `json:"verify_token"`
+}
+
+// SetWebhookOverride subscribes the app with an alternate callback URL for the given WABA or phone number.
+func (c *CloudClient) SetWebhookOverride(ctx context.Context, id, callbackURL, verifyToken string) (*types.SubscribedApp, error) {
+	path := fmt.Sprintf("%s/subscribed_apps", id)
+	body := overrideRequest{OverrideCallbackURI: callbackURL, VerifyToken: verifyToken}
+	var app types.SubscribedApp
+	if err := c.do(ctx, "POST", path, body, &app); err != nil {
+		return nil, fmt.Errorf("set webhook override: %w", err)
+	}
+	return &app, nil
+}

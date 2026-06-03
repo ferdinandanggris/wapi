@@ -39,6 +39,7 @@ type Client interface {
 	GetWebhookSubscription(ctx context.Context, wabaID string) (*types.SubscribedApp, error)
 	SetWebhookFields(ctx context.Context, appID string, fields ...string) error
 	SetWebhookCallback(ctx context.Context, appID, callbackURL, verifyToken string, fields ...string) error
+	SetWebhookOverride(ctx context.Context, id, callbackURL, verifyToken string) (*types.SubscribedApp, error)
 
 	Close() error
 }
