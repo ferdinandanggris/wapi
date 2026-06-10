@@ -26,7 +26,6 @@ func (c *CloudClient) SendMessage(ctx context.Context, phoneNumberID string, msg
 // MarkAsRead marks an incoming message as read. messageID must be an incoming message ID.
 func (c *CloudClient) MarkAsRead(ctx context.Context, phoneNumberID string, messageID string) error {
 	msg := types.NewMarkAsRead(messageID)
-	msg.To = "0"
 
 	path := fmt.Sprintf("%s/messages", phoneNumberID)
 	return c.do(ctx, "POST", path, msg, nil)

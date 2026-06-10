@@ -20,6 +20,9 @@ type Message struct {
 	Interactive      *Interactive       `json:"interactive,omitempty"`
 	Template         *TemplateMessage   `json:"template,omitempty"`
 	Status           string             `json:"status,omitempty"`
+
+	// MarkAsRead message ID (top-level)
+	MessageID        string             `json:"message_id,omitempty"`
 }
 
 // SendResponse is returned by SendMessage on success.
@@ -280,12 +283,13 @@ func NewRemoveReactionMessage(to, messageID string) *Message {
 }
 
 // NewMarkAsRead creates a "read" status update for an incoming message.
+// The messageID must be an incoming message ID (wamid).
+// WhatsApp API: { "messaging_product": "whatsapp", "status": "read", "message_id": "..." }
 func NewMarkAsRead(messageID string) *Message {
 	return &Message{
 		MessagingProduct: "whatsapp",
-		Type:             "action",
 		Status:           "read",
-		Context:          &Context{MessageID: messageID},
+		MessageID:        messageID,
 	}
 }
 
