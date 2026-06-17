@@ -19,13 +19,15 @@ type Throughput struct {
 
 // BusinessProfile holds the WhatsApp Business profile information.
 type BusinessProfile struct {
-	MessagingProduct string   `json:"messaging_product"`
-	Address          string   `json:"address,omitempty"`
-	Description      string   `json:"description,omitempty"`
-	Vertical         string   `json:"vertical,omitempty"`
-	Email            string   `json:"email,omitempty"`
-	Websites         []string `json:"websites,omitempty"`
-	ProfilePictureURL string  `json:"profile_picture_url,omitempty"`
+	MessagingProduct     string   `json:"messaging_product"`
+	About                string   `json:"about,omitempty"`
+	Address              string   `json:"address,omitempty"`
+	Description          string   `json:"description,omitempty"`
+	Vertical             string   `json:"vertical,omitempty"`
+	Email                string   `json:"email,omitempty"`
+	Websites             []string `json:"websites,omitempty"`
+	ProfilePictureURL    string   `json:"profile_picture_url,omitempty"`
+	ProfilePictureHandle string   `json:"profile_picture_handle,omitempty"`
 }
 
 type RegisterRequest struct {

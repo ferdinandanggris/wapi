@@ -33,6 +33,7 @@ type Client interface {
 
 	GetBusinessProfile(ctx context.Context, phoneNumberID string) (*types.BusinessProfile, error)
 	UpdateBusinessProfile(ctx context.Context, phoneNumberID string, profile *types.BusinessProfile) error
+	ResumableUpload(ctx context.Context, appID string, data []byte, mimeType string) (string, error)
 
 	SubscribeToWebhooks(ctx context.Context, wabaID string) (*types.SubscribedApp, error)
 	UnsubscribeFromWebhooks(ctx context.Context, wabaID string) error

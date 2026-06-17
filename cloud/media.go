@@ -1,7 +1,9 @@
 package cloud
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -18,6 +20,59 @@ func (c *CloudClient) UploadMedia(ctx context.Context, phoneNumberID, filename s
 		return nil, fmt.Errorf("upload media: %w", err)
 	}
 	return &resp, nil
+}
+
+// ResumableUpload uses Meta's Resumable Upload API to upload a file and return a handle.
+// Two steps: (1) POST /{appId}/uploads to get session ID, (2) POST /{sessionId} with file content.
+// The returned handle is used as profile_picture_handle in UpdateBusinessProfile.
+func (c *CloudClient) ResumableUpload(ctx context.Context, appID string, data []byte, mimeType string) (string, error) {
+	// Step 1: Initialize upload session
+	initPath := fmt.Sprintf("%s/uploads?file_length=%d&file_type=%s", appID, len(data), mimeType)
+	var initResp struct {
+		ID string `json:"id"`
+	}
+	if err := c.do(ctx, "POST", initPath, nil, &initResp); err != nil {
+		return "", fmt.Errorf("init resumable upload: %w", err)
+	}
+	if initResp.ID == "" {
+		return "", fmt.Errorf("init resumable upload: empty session id")
+	}
+
+	// Step 2: Upload file content to the session endpoint
+	uploadReq, err := http.NewRequestWithContext(ctx, "POST", c.apiURL(initResp.ID), bytes.NewReader(data))
+	if err != nil {
+		return "", fmt.Errorf("create upload request: %w", err)
+	}
+	uploadReq.Header.Set("Authorization", "Bearer "+c.accessToken)
+	uploadReq.Header.Set("file_offset", "0")
+	uploadReq.Header.Set("Content-Type", "application/octet-stream")
+	uploadReq.ContentLength = int64(len(data))
+
+	var uploadResp struct {
+		Handle string `json:"h"`
+	}
+	// Use sendRequest directly since we bypass the standard do() for the session ID endpoint
+	rawResp, err := c.httpClient.Do(uploadReq)
+	if err != nil {
+		return "", fmt.Errorf("send upload request: %w", err)
+	}
+	defer rawResp.Body.Close()
+
+	body, err := io.ReadAll(rawResp.Body)
+	if err != nil {
+		return "", fmt.Errorf("read upload response: %w", err)
+	}
+	if rawResp.StatusCode >= 400 {
+		return "", fmt.Errorf("upload content: HTTP %d: %s", rawResp.StatusCode, string(body))
+	}
+	if err := json.Unmarshal(body, &uploadResp); err != nil {
+		return "", fmt.Errorf("parse upload response: %w", err)
+	}
+	if uploadResp.Handle == "" {
+		return "", fmt.Errorf("upload content: empty handle in response: %s", string(body))
+	}
+
+	return uploadResp.Handle, nil
 }
 
 // GetMediaURL returns metadata (including download URL) for a media ID.
