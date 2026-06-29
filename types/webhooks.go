@@ -20,11 +20,11 @@ type WebhookChange struct {
 
 // WebhookValue contains the actual payload: messages, statuses, contacts, and metadata.
 type WebhookValue struct {
-	MessagingProduct string           `json:"messaging_product"`
-	Metadata         *Metadata        `json:"metadata"`
-	Contacts         []*WaContact     `json:"contacts,omitempty"`
-	Messages         []*IncomingMsg   `json:"messages,omitempty"`
-	Statuses         []*StatusUpdate  `json:"statuses,omitempty"`
+	MessagingProduct string          `json:"messaging_product"`
+	Metadata         *Metadata       `json:"metadata"`
+	Contacts         []*WaContact    `json:"contacts,omitempty"`
+	Messages         []*IncomingMsg  `json:"messages,omitempty"`
+	Statuses         []*StatusUpdate `json:"statuses,omitempty"`
 }
 
 type Metadata struct {
@@ -43,23 +43,24 @@ type Profile struct {
 
 // IncomingMsg represents a message received via webhook (text, image, interactive reply, etc).
 type IncomingMsg struct {
-	From        string             `json:"from"`
-	ID          string             `json:"id"`
-	Timestamp   string             `json:"timestamp"`
-	Type        string             `json:"type"`
-	Text        *IncomingText      `json:"text,omitempty"`
-	Image       *IncomingMedia     `json:"image,omitempty"`
-	Video       *IncomingMedia     `json:"video,omitempty"`
-	Audio       *IncomingMedia     `json:"audio,omitempty"`
-	Document    *IncomingDocument  `json:"document,omitempty"`
-	Location    *IncomingLocation  `json:"location,omitempty"`
-	Contacts    []*Contact         `json:"contacts,omitempty"`
+	From        string               `json:"from"`
+	ID          string               `json:"id"`
+	Timestamp   string               `json:"timestamp"`
+	Type        string               `json:"type"`
+	Text        *IncomingText        `json:"text,omitempty"`
+	Image       *IncomingMedia       `json:"image,omitempty"`
+	Video       *IncomingMedia       `json:"video,omitempty"`
+	Audio       *IncomingMedia       `json:"audio,omitempty"`
+	Document    *IncomingDocument    `json:"document,omitempty"`
+	Sticker     *IncomingMedia       `json:"sticker,omitempty"`
+	Location    *IncomingLocation    `json:"location,omitempty"`
+	Contacts    []*Contact           `json:"contacts,omitempty"`
 	Interactive *IncomingInteractive `json:"interactive,omitempty"`
-	Button      *IncomingButton    `json:"button,omitempty"`
-	Context     *IncomingContext   `json:"context,omitempty"`
-	Referral    *IncomingReferral  `json:"referral,omitempty"`
-	Order       *IncomingOrder     `json:"order,omitempty"`
-	Reaction    *IncomingReaction  `json:"reaction,omitempty"`
+	Button      *IncomingButton      `json:"button,omitempty"`
+	Context     *IncomingContext     `json:"context,omitempty"`
+	Referral    *IncomingReferral    `json:"referral,omitempty"`
+	Order       *IncomingOrder       `json:"order,omitempty"`
+	Reaction    *IncomingReaction    `json:"reaction,omitempty"`
 }
 
 type IncomingText struct {
@@ -90,9 +91,9 @@ type IncomingLocation struct {
 }
 
 type IncomingInteractive struct {
-	Type            string               `json:"type"`
-	InButtonReply   *IncomingButtonReply  `json:"button_reply,omitempty"`
-	InListReply     *IncomingListReply    `json:"list_reply,omitempty"`
+	Type          string               `json:"type"`
+	InButtonReply *IncomingButtonReply `json:"button_reply,omitempty"`
+	InListReply   *IncomingListReply   `json:"list_reply,omitempty"`
 }
 
 type IncomingButtonReply struct {
@@ -112,28 +113,28 @@ type IncomingButton struct {
 }
 
 type IncomingContext struct {
-	From      string `json:"from,omitempty"`
-	ID        string `json:"id,omitempty"`
-	Referrer  string `json:"referrer,omitempty"`
+	From     string `json:"from,omitempty"`
+	ID       string `json:"id,omitempty"`
+	Referrer string `json:"referrer,omitempty"`
 }
 
 type IncomingReferral struct {
-	SourceURL     string `json:"source_url,omitempty"`
-	SourceType    string `json:"source_type,omitempty"`
-	SourceID      string `json:"source_id,omitempty"`
-	Headline      string `json:"headline,omitempty"`
-	Body          string `json:"body,omitempty"`
-	MediaType     string `json:"media_type,omitempty"`
-	ImageURL      string `json:"image_url,omitempty"`
-	VideoURL      string `json:"video_url,omitempty"`
-	ThumbnailURL  string `json:"thumbnail_url,omitempty"`
-	CTAPayload    string `json:"cta_payload,omitempty"`
+	SourceURL    string `json:"source_url,omitempty"`
+	SourceType   string `json:"source_type,omitempty"`
+	SourceID     string `json:"source_id,omitempty"`
+	Headline     string `json:"headline,omitempty"`
+	Body         string `json:"body,omitempty"`
+	MediaType    string `json:"media_type,omitempty"`
+	ImageURL     string `json:"image_url,omitempty"`
+	VideoURL     string `json:"video_url,omitempty"`
+	ThumbnailURL string `json:"thumbnail_url,omitempty"`
+	CTAPayload   string `json:"cta_payload,omitempty"`
 }
 
 type IncomingOrder struct {
-	CatalogID string          `json:"catalog_id"`
+	CatalogID    string       `json:"catalog_id"`
 	ProductItems []*OrderItem `json:"product_items"`
-	Text      string          `json:"text,omitempty"`
+	Text         string       `json:"text,omitempty"`
 }
 
 type OrderItem struct {
@@ -145,13 +146,13 @@ type OrderItem struct {
 
 // StatusUpdate is a delivery or read receipt for a sent message.
 type StatusUpdate struct {
-	ID            string              `json:"id"`
-	Status        string              `json:"status"`
-	Timestamp     string              `json:"timestamp"`
-	RecipientID   string              `json:"recipient_id"`
-	Conversation  *StatusConversation `json:"conversation,omitempty"`
-	Pricing       *StatusPricing      `json:"pricing,omitempty"`
-	Errors        []*StatusError      `json:"errors,omitempty"`
+	ID           string              `json:"id"`
+	Status       string              `json:"status"`
+	Timestamp    string              `json:"timestamp"`
+	RecipientID  string              `json:"recipient_id"`
+	Conversation *StatusConversation `json:"conversation,omitempty"`
+	Pricing      *StatusPricing      `json:"pricing,omitempty"`
+	Errors       []*StatusError      `json:"errors,omitempty"`
 }
 
 type StatusConversation struct {
@@ -164,9 +165,9 @@ type ConversationOrigin struct {
 }
 
 type StatusPricing struct {
-	Billable      bool   `json:"billable"`
-	PricingModel  string `json:"pricing_model"`
-	Category      string `json:"category"`
+	Billable     bool   `json:"billable"`
+	PricingModel string `json:"pricing_model"`
+	Category     string `json:"category"`
 }
 
 type StatusError struct {
@@ -182,17 +183,17 @@ type StatusErrorData struct {
 
 // SubscribedApp represents the app subscribed to webhook events.
 type SubscribedApp struct {
-	Name                 string   `json:"name,omitempty"`
-	ID                   string   `json:"id,omitempty"`
-	OverrideCallbackURI  string   `json:"override_callback_uri,omitempty"`
+	Name                string `json:"name,omitempty"`
+	ID                  string `json:"id,omitempty"`
+	OverrideCallbackURI string `json:"override_callback_uri,omitempty"`
 }
 
 // Subscription represents a webhook subscription configuration.
 type Subscription struct {
-	Object             string              `json:"object"`
-	CallbackURL        string              `json:"callback_url,omitempty"`
-	Fields             []*SubscriptionField `json:"fields,omitempty"`
-	VerifyToken        string              `json:"verify_token,omitempty"`
+	Object      string               `json:"object"`
+	CallbackURL string               `json:"callback_url,omitempty"`
+	Fields      []*SubscriptionField `json:"fields,omitempty"`
+	VerifyToken string               `json:"verify_token,omitempty"`
 }
 
 type SubscriptionField struct {
@@ -207,6 +208,6 @@ type IncomingReaction struct {
 
 // SubscriptionResponse contains the list of subscribed webhook fields.
 type SubscriptionResponse struct {
-	Data     []*Subscription `json:"data,omitempty"`
-	Fields   string          `json:"fields,omitempty"`
+	Data   []*Subscription `json:"data,omitempty"`
+	Fields string          `json:"fields,omitempty"`
 }
