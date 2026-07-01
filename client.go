@@ -35,6 +35,8 @@ type Client interface {
 	UpdateBusinessProfile(ctx context.Context, phoneNumberID string, profile *types.BusinessProfile) error
 	ResumableUpload(ctx context.Context, appID string, data []byte, mimeType string) (string, error)
 
+	ListWhatsAppBusinessAccounts(ctx context.Context, businessID string, opts ...ListOption) (*types.WABAList, error)
+
 	SubscribeToWebhooks(ctx context.Context, wabaID string) (*types.SubscribedApp, error)
 	UnsubscribeFromWebhooks(ctx context.Context, wabaID string) error
 	GetWebhookSubscription(ctx context.Context, wabaID string) (*types.SubscribedApp, error)

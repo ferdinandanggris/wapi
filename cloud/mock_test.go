@@ -162,5 +162,19 @@ func newDefaultMockServer() *mockServer {
 	ms.on("POST", "/123/whatsapp_business_profile", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]bool{"success": true})
 	})
+	ms.on("GET", "/business-789/owned_whatsapp_business_accounts", func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, http.StatusOK, map[string]interface{}{
+			"data": []map[string]interface{}{
+				{"id": "906278885743121", "name": "Seller Pulsa", "timezone_id": "66", "message_template_namespace": "dddcb3ee_59b1_4397_99e4_5f2017232c44"},
+				{"id": "841222862303866", "name": "Family Pulsa", "currency": "IDR", "timezone_id": "66", "message_template_namespace": "46a16bc1_0dd7_4ca6_95fb_428149ddcb6b"},
+			},
+			"paging": map[string]interface{}{
+				"cursors": map[string]string{
+					"before": "cursor-before",
+					"after":  "cursor-after",
+				},
+			},
+		})
+	})
 	return ms
 }
